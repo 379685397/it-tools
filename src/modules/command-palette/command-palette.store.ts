@@ -16,57 +16,58 @@ export const useCommandPaletteStore = defineStore('command-palette', () => {
   const styleStore = useStyleStore();
   const router = useRouter();
   const searchPrompt = ref('');
+  const { t } = useI18n();
 
   const toolsOptions = toolStore.tools.map(tool => ({
     ...tool,
     to: tool.path,
     toolCategory: tool.category,
-    category: 'Tools',
+    category: t('commandPalette.category.tools'),
   }));
 
   const searchOptions: PaletteOption[] = [
     ...toolsOptions,
     {
-      name: 'Random tool',
-      description: 'Get a random tool from the list.',
+      name: t('commandPalette.randomTool'),
+      description: t('commandPalette.randomToolDesc'),
       action: () => {
         const { path } = _.sample(toolStore.tools)!;
         router.push(path);
       },
       icon: DiceIcon,
-      category: 'Tools',
+      category: t('commandPalette.category.tools'),
       keywords: ['random', 'tool', 'pick', 'choose', 'select'],
       closeOnSelect: true,
     },
     {
-      name: 'Toggle dark mode',
-      description: 'Toggle dark mode on or off.',
+      name: t('commandPalette.toggleDark'),
+      description: t('commandPalette.toggleDarkDesc'),
       action: () => styleStore.toggleDark(),
       icon: SunIcon,
-      category: 'Actions',
+      category: t('commandPalette.category.actions'),
       keywords: ['dark', 'theme', 'toggle', 'mode', 'light', 'system'],
     },
     {
-      name: 'Github repository',
+      name: t('commandPalette.github'),
       href: 'https://github.com/CorentinTh/it-tools',
-      category: 'External',
-      description: 'View the source code of it-tools on Github.',
+      category: t('commandPalette.category.external'),
+      description: t('commandPalette.githubDesc'),
       keywords: ['github', 'repo', 'repository', 'source', 'code'],
       icon: GithubIcon,
     },
     {
-      name: 'Report a bug or an issue',
-      description: 'Report a bug or an issue to help improve it-tools.',
+      name: t('commandPalette.reportBug'),
+      description: t('commandPalette.reportBugDesc'),
       href: 'https://github.com/CorentinTh/it-tools/issues/new/choose',
-      category: 'Actions',
+      category: t('commandPalette.category.actions'),
       keywords: ['report', 'issue', 'bug', 'problem', 'error'],
       icon: BugIcon,
     },
     {
-      name: 'About',
-      description: 'Learn more about IT-Tools.',
+      name: t('commandPalette.about'),
+      description: t('commandPalette.aboutDesc'),
       to: '/about',
-      category: 'Pages',
+      category: t('commandPalette.category.pages'),
       keywords: ['about', 'learn', 'more', 'info', 'information'],
       icon: InfoIcon,
     },

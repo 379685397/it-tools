@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { useThemeVars } from 'naive-ui';
 import Memo from './regex-memo.content.md';
+import MemoZh from './regex-memo.content.zh.md';
 
 const themeVars = useThemeVars();
+const { locale } = useI18n();
+
+const contentComponent = computed(() => (locale.value?.toString().startsWith('zh') ? MemoZh : Memo));
 </script>
 
 <template>
   <div>
-    <Memo />
+    <component :is="contentComponent" />
   </div>
 </template>
 

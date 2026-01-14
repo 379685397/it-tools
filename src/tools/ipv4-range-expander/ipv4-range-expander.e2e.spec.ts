@@ -6,12 +6,12 @@ test.describe('Tool - IPv4 range expander', () => {
   });
 
   test('Has correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('IPv4 range expander - IT Tools');
+    await expect(page).toHaveTitle('IPv4范围扩展器 - IT-Tools');
   });
 
   test('Calculates correct for valid input', async ({ page }) => {
-    await page.getByPlaceholder('Start IPv4 address...').fill('192.168.1.1');
-    await page.getByPlaceholder('End IPv4 address...').fill('192.168.7.255');
+    await page.getByTestId('start-ip').fill('192.168.1.1');
+    await page.getByTestId('end-ip').fill('192.168.7.255');
 
     expect(await page.getByTestId('start-address.old').textContent()).toEqual('192.168.1.1');
     expect(await page.getByTestId('start-address.new').textContent()).toEqual('192.168.0.0');
@@ -24,8 +24,8 @@ test.describe('Tool - IPv4 range expander', () => {
   });
 
   test('Calculates correct for valid input, where first octet is lower than 128', async ({ page }) => {
-    await page.getByPlaceholder('Start IPv4 address...').fill('10.0.0.1');
-    await page.getByPlaceholder('End IPv4 address...').fill('10.0.0.17');
+    await page.getByTestId('start-ip').fill('10.0.0.1');
+    await page.getByTestId('end-ip').fill('10.0.0.17');
 
     expect(await page.getByTestId('start-address.old').textContent()).toEqual('10.0.0.1');
     expect(await page.getByTestId('start-address.new').textContent()).toEqual('10.0.0.0');
@@ -38,8 +38,8 @@ test.describe('Tool - IPv4 range expander', () => {
   });
 
   test('Hides result for invalid input', async ({ page }) => {
-    await page.getByPlaceholder('Start IPv4 address...').fill('192.168.1.1');
-    await page.getByPlaceholder('End IPv4 address...').fill('192.168.0.255');
+    await page.getByTestId('start-ip').fill('192.168.1.1');
+    await page.getByTestId('end-ip').fill('192.168.0.255');
 
     await expect(page.getByTestId('result')).not.toBeVisible();
   });

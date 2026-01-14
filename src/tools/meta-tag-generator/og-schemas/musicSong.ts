@@ -1,6 +1,7 @@
 import type { OGSchemaType } from '../OGSchemaType.type';
 
 export const musicSong: OGSchemaType = {
+  id: 'music-song',
   name: 'Song details',
   elements: [
     { type: 'input', label: 'Duration', placeholder: 'The duration of the song...', key: 'music:duration' },

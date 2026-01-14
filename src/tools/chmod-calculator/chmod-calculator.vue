@@ -7,11 +7,12 @@ import { computeChmodOctalRepresentation, computeChmodSymbolicRepresentation } f
 import type { Group, Scope } from './chmod-calculator.types';
 
 const themeVars = useThemeVars();
+const { t } = useI18n();
 
-const scopes: { scope: Scope; title: string }[] = [
-  { scope: 'read', title: 'Read (4)' },
-  { scope: 'write', title: 'Write (2)' },
-  { scope: 'execute', title: 'Execute (1)' },
+const scopes: { scope: Scope; titleKey: string }[] = [
+  { scope: 'read', titleKey: 'tools.chmod-calculator.scopes.read' },
+  { scope: 'write', titleKey: 'tools.chmod-calculator.scopes.write' },
+  { scope: 'execute', titleKey: 'tools.chmod-calculator.scopes.execute' },
 ];
 const groups: Group[] = ['owner', 'group', 'public'];
 
@@ -32,20 +33,20 @@ const symbolic = computed(() => computeChmodSymbolicRepresentation({ permissions
         <tr>
           <th class="text-center" scope="col" />
           <th class="text-center" scope="col">
-            Owner (u)
+            {{ t('tools.chmod-calculator.groups.owner') }}
           </th>
           <th class="text-center" scope="col">
-            Group (g)
+            {{ t('tools.chmod-calculator.groups.group') }}
           </th>
           <th class="text-center" scope="col">
-            Public (o)
+            {{ t('tools.chmod-calculator.groups.public') }}
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="{ scope, title } of scopes" :key="scope">
+        <tr v-for="{ scope, titleKey } of scopes" :key="scope">
           <td class="line-header">
-            {{ title }}
+            {{ t(titleKey) }}
           </td>
           <td v-for="group of groups" :key="group" class="text-center">
             <!-- <n-switch v-model:value="permissions[group][scope]" /> -->

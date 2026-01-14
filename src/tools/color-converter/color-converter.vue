@@ -10,46 +10,55 @@ import { buildColorFormat } from './color-converter.models';
 
 extend([cmykPlugin, hwbPlugin, namesPlugin, lchPlugin]);
 
+const { t } = useI18n();
+
 const formats = {
   picker: buildColorFormat({
-    label: 'color picker',
+    label: 'picker',
     format: (v: Colord) => v.toHex(),
     type: 'color-picker',
   }),
   hex: buildColorFormat({
     label: 'hex',
     format: (v: Colord) => v.toHex(),
-    placeholder: 'e.g. #ff0000',
+    placeholder: t('tools.color-converter.placeholder.hex'),
+    invalidMessage: t('tools.color-converter.invalidFormat', { format: 'HEX' }),
   }),
   rgb: buildColorFormat({
     label: 'rgb',
     format: (v: Colord) => v.toRgbString(),
-    placeholder: 'e.g. rgb(255, 0, 0)',
+    placeholder: t('tools.color-converter.placeholder.rgb'),
+    invalidMessage: t('tools.color-converter.invalidFormat', { format: 'RGB' }),
   }),
   hsl: buildColorFormat({
     label: 'hsl',
     format: (v: Colord) => v.toHslString(),
-    placeholder: 'e.g. hsl(0, 100%, 50%)',
+    placeholder: t('tools.color-converter.placeholder.hsl'),
+    invalidMessage: t('tools.color-converter.invalidFormat', { format: 'HSL' }),
   }),
   hwb: buildColorFormat({
     label: 'hwb',
     format: (v: Colord) => v.toHwbString(),
-    placeholder: 'e.g. hwb(0, 0%, 0%)',
+    placeholder: t('tools.color-converter.placeholder.hwb'),
+    invalidMessage: t('tools.color-converter.invalidFormat', { format: 'HWB' }),
   }),
   lch: buildColorFormat({
     label: 'lch',
     format: (v: Colord) => v.toLchString(),
-    placeholder: 'e.g. lch(53.24, 104.55, 40.85)',
+    placeholder: t('tools.color-converter.placeholder.lch'),
+    invalidMessage: t('tools.color-converter.invalidFormat', { format: 'LCH' }),
   }),
   cmyk: buildColorFormat({
     label: 'cmyk',
     format: (v: Colord) => v.toCmykString(),
-    placeholder: 'e.g. cmyk(0, 100%, 100%, 0)',
+    placeholder: t('tools.color-converter.placeholder.cmyk'),
+    invalidMessage: t('tools.color-converter.invalidFormat', { format: 'CMYK' }),
   }),
   name: buildColorFormat({
     label: 'name',
-    format: (v: Colord) => v.toName({ closest: true }) ?? 'Unknown',
-    placeholder: 'e.g. red',
+    format: (v: Colord) => v.toName({ closest: true }) ?? t('tools.color-converter.unknown'),
+    placeholder: t('tools.color-converter.placeholder.name'),
+    invalidMessage: t('tools.color-converter.invalidFormat', { format: t('tools.color-converter.label.name') }),
   }),
 };
 
@@ -74,12 +83,12 @@ function updateColorValue(value: Colord | undefined, omitLabel?: string) {
 
 <template>
   <c-card>
-    <template v-for="({ label, parse, placeholder, validation, type }, key) in formats" :key="key">
+    <template v-for="({ parse, placeholder, validation, type }, key) in formats" :key="key">
       <input-copyable
         v-if="type === 'text'"
         v-model:value="formats[key].value.value"
         :test-id="`input-${key}`"
-        :label="`${label}:`"
+        :label="`${t(`tools.color-converter.label.${key}`)}:`"
         label-position="left"
         label-width="100px"
         label-align="right"
@@ -91,7 +100,7 @@ function updateColorValue(value: Colord | undefined, omitLabel?: string) {
         @update:value="(v:string) => updateColorValue(parse(v), key)"
       />
 
-      <n-form-item v-else-if="type === 'color-picker'" :label="`${label}:`" label-width="100" label-placement="left" :show-feedback="false">
+      <n-form-item v-else-if="type === 'color-picker'" :label="`${t(`tools.color-converter.label.${key}`)}:`" label-width="100" label-placement="left" :show-feedback="false">
         <n-color-picker
           v-model:value="formats[key].value.value"
           placement="bottom-end"

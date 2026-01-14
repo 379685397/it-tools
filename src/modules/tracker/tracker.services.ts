@@ -12,11 +12,20 @@ function createTrackerService({ plausible }: { plausible: ReturnType<typeof Plau
   };
 }
 
+function createNoopTrackerService() {
+  return {
+    trackEvent(_payload: { eventName: string }) {
+    },
+  };
+}
+
 function useTracker() {
   const plausible: ReturnType<typeof Plausible> | undefined = inject('plausible');
 
   if (_.isNil(plausible)) {
-    throw new TypeError('Plausible must be instantiated');
+    return {
+      tracker: createNoopTrackerService(),
+    };
   }
 
   const tracker = createTrackerService({ plausible });

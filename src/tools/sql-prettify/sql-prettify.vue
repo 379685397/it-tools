@@ -3,6 +3,8 @@ import { type FormatOptionsWithLanguage, format as formatSQL } from 'sql-formatt
 import TextareaCopyable from '@/components/TextareaCopyable.vue';
 import { useStyleStore } from '@/stores/style.store';
 
+const { t } = useI18n();
+
 const inputElement = ref<HTMLElement>();
 const styleStore = useStyleStore();
 const config = reactive<FormatOptionsWithLanguage>({
@@ -15,6 +17,34 @@ const config = reactive<FormatOptionsWithLanguage>({
 
 const rawSQL = ref('select field1,field2,field3 from my_table where my_condition;');
 const prettySQL = computed(() => formatSQL(rawSQL.value, config));
+
+const dialectOptions = [
+  { label: 'GCP BigQuery', value: 'bigquery' },
+  { label: 'IBM DB2', value: 'db2' },
+  { label: 'Apache Hive', value: 'hive' },
+  { label: 'MariaDB', value: 'mariadb' },
+  { label: 'MySQL', value: 'mysql' },
+  { label: 'Couchbase N1QL', value: 'n1ql' },
+  { label: 'Oracle PL/SQL', value: 'plsql' },
+  { label: 'PostgreSQL', value: 'postgresql' },
+  { label: 'Amazon Redshift', value: 'redshift' },
+  { label: 'Spark', value: 'spark' },
+  { label: 'Standard SQL', value: 'sql' },
+  { label: 'sqlite', value: 'sqlite' },
+  { label: 'SQL Server Transact-SQL', value: 'tsql' },
+];
+
+const keywordCaseOptions = computed(() => [
+  { label: t('tools.sql-prettify.keywordCase.upper'), value: 'upper' },
+  { label: t('tools.sql-prettify.keywordCase.lower'), value: 'lower' },
+  { label: t('tools.sql-prettify.keywordCase.preserve'), value: 'preserve' },
+]);
+
+const indentStyleOptions = computed(() => [
+  { label: t('tools.sql-prettify.indentStyle.standard'), value: 'standard' },
+  { label: t('tools.sql-prettify.indentStyle.tabularLeft'), value: 'tabularLeft' },
+  { label: t('tools.sql-prettify.indentStyle.tabularRight'), value: 'tabularRight' },
+]);
 </script>
 
 <template>
@@ -23,49 +53,27 @@ const prettySQL = computed(() => formatSQL(rawSQL.value, config));
       <c-select
         v-model:value="config.language"
         flex-1
-        label="Dialect"
-        :options="[
-          { label: 'GCP BigQuery', value: 'bigquery' },
-          { label: 'IBM DB2', value: 'db2' },
-          { label: 'Apache Hive', value: 'hive' },
-          { label: 'MariaDB', value: 'mariadb' },
-          { label: 'MySQL', value: 'mysql' },
-          { label: 'Couchbase N1QL', value: 'n1ql' },
-          { label: 'Oracle PL/SQL', value: 'plsql' },
-          { label: 'PostgreSQL', value: 'postgresql' },
-          { label: 'Amazon Redshift', value: 'redshift' },
-          { label: 'Spark', value: 'spark' },
-          { label: 'Standard SQL', value: 'sql' },
-          { label: 'sqlite', value: 'sqlite' },
-          { label: 'SQL Server Transact-SQL', value: 'tsql' },
-        ]"
+        :label="t('tools.sql-prettify.dialectLabel')"
+        :options="dialectOptions"
       />
       <c-select
-        v-model:value="config.keywordCase" label="Keyword case"
+        v-model:value="config.keywordCase" :label="t('tools.sql-prettify.keywordCaseLabel')"
         flex-1
-        :options="[
-          { label: 'UPPERCASE', value: 'upper' },
-          { label: 'lowercase', value: 'lower' },
-          { label: 'Preserve', value: 'preserve' },
-        ]"
+        :options="keywordCaseOptions"
       />
       <c-select
-        v-model:value="config.indentStyle" label="Indent style"
+        v-model:value="config.indentStyle" :label="t('tools.sql-prettify.indentStyleLabel')"
         flex-1
-        :options="[
-          { label: 'Standard', value: 'standard' },
-          { label: 'Tabular left', value: 'tabularLeft' },
-          { label: 'Tabular right', value: 'tabularRight' },
-        ]"
+        :options="indentStyleOptions"
       />
     </div>
   </div>
 
-  <n-form-item label="Your SQL query">
+  <n-form-item :label="t('tools.sql-prettify.inputLabel')">
     <c-input-text
       ref="inputElement"
       v-model:value="rawSQL"
-      placeholder="Put your SQL query here..."
+      :placeholder="t('tools.sql-prettify.inputPlaceholder')"
       rows="20"
       multiline
       autocomplete="off"
@@ -75,7 +83,7 @@ const prettySQL = computed(() => formatSQL(rawSQL.value, config));
       monospace
     />
   </n-form-item>
-  <n-form-item label="Prettify version of your query">
+  <n-form-item :label="t('tools.sql-prettify.outputLabel')">
     <TextareaCopyable :value="prettySQL" language="sql" :follow-height-of="inputElement" />
   </n-form-item>
 </template>

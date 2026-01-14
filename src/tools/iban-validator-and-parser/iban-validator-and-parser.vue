@@ -4,6 +4,7 @@ import { getFriendlyErrors } from './iban-validator-and-parser.service';
 import type { CKeyValueListItems } from '@/ui/c-key-value-list/c-key-value-list.types';
 
 const rawIban = ref('');
+const { t } = useI18n();
 
 const ibanInfo = computed<CKeyValueListItems>(() => {
   const iban = rawIban.value.toUpperCase().replace(/\s/g, '').replace(/-/g, '');
@@ -14,36 +15,36 @@ const ibanInfo = computed<CKeyValueListItems>(() => {
 
   const { valid: isIbanValid, errorCodes } = validateIBAN(iban);
   const { countryCode, bban } = extractIBAN(iban);
-  const errors = getFriendlyErrors(errorCodes);
+  const errors = getFriendlyErrors(errorCodes)
+    .map(errorKey => t(`tools.iban-validator-and-parser.errors.${errorKey}`));
 
   return [
-
     {
-      label: 'Is IBAN valid ?',
+      label: t('tools.iban-validator-and-parser.fields.isValid'),
       value: isIbanValid,
       showCopyButton: false,
     },
     {
-      label: 'IBAN errors',
+      label: t('tools.iban-validator-and-parser.fields.errors'),
       value: errors.length === 0 ? undefined : errors,
       hideOnNil: true,
       showCopyButton: false,
     },
     {
-      label: 'Is IBAN a QR-IBAN ?',
+      label: t('tools.iban-validator-and-parser.fields.isQrIban'),
       value: isQRIBAN(iban),
       showCopyButton: false,
     },
     {
-      label: 'Country code',
+      label: t('tools.iban-validator-and-parser.fields.countryCode'),
       value: countryCode,
     },
     {
-      label: 'BBAN',
+      label: t('tools.iban-validator-and-parser.fields.bban'),
       value: bban,
     },
     {
-      label: 'IBAN friendly format',
+      label: t('tools.iban-validator-and-parser.fields.friendlyFormat'),
       value: friendlyFormatIBAN(iban),
     },
   ];
@@ -58,13 +59,13 @@ const ibanExamples = [
 
 <template>
   <div>
-    <c-input-text v-model:value="rawIban" placeholder="Enter an IBAN to check for validity..." test-id="iban-input" />
+    <c-input-text v-model:value="rawIban" :placeholder="t('tools.iban-validator-and-parser.inputPlaceholder')" test-id="iban-input" />
 
     <c-card v-if="ibanInfo.length > 0" mt-5>
       <c-key-value-list :items="ibanInfo" data-test-id="iban-info" />
     </c-card>
 
-    <c-card title="Valid IBAN examples" mt-5>
+    <c-card :title="t('tools.iban-validator-and-parser.examplesTitle')" mt-5>
       <div v-for="iban in ibanExamples" :key="iban">
         <c-text-copyable :value="iban" font-mono :displayed-value="friendlyFormatIBAN(iban)" />
       </div>

@@ -6,6 +6,6 @@ test.describe('Tool - Phone parser and formatter', () => {
   });
 
   test('Has correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Phone parser and formatter - IT Tools');
+    await expect(page).toHaveTitle('电话分析器和格式化程序 - IT-Tools');
   });
 });

@@ -1,6 +1,7 @@
 import type { OGSchemaType } from '../OGSchemaType.type';
 
 export const twitter: OGSchemaType = {
+  id: 'twitter',
   name: 'Twitter',
   elements: [
     {

@@ -30,6 +30,7 @@ const typeOptions = [
 ];
 
 export const website: OGSchemaType = {
+  id: 'general',
   name: 'General information',
   elements: [
     {

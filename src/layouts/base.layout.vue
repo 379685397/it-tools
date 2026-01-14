@@ -39,7 +39,7 @@ const tools = computed<ToolCategory[]>(() => [
         <HeroGradient class="gradient" />
         <div class="text-wrapper">
           <div class="title">
-            IT - TOOLS
+            {{ $t('home.brand.title') }}
           </div>
           <div class="divider" />
           <div class="subtitle">
@@ -61,7 +61,7 @@ const tools = computed<ToolCategory[]>(() => [
 
         <div class="footer">
           <div>
-            IT-Tools
+            {{ $t('home.brand.short') }}
 
             <c-link target="_blank" rel="noopener" :href="`https://github.com/CorentinTh/it-tools/tree/v${version}`">
               v{{ version }}
@@ -109,6 +109,12 @@ const tools = computed<ToolCategory[]>(() => [
         <c-tooltip :tooltip="$t('home.uiLib')" position="bottom">
           <c-button v-if="config.app.env === 'development'" to="/c-lib" circle variant="text" :aria-label="$t('home.uiLib')">
             <icon-mdi:brush-variant text-20px />
+          </c-button>
+        </c-tooltip>
+
+        <c-tooltip position="bottom" :tooltip="$t('home.toolGuide')">
+          <c-button to="/guide" circle variant="text" :aria-label="$t('home.toolGuide')">
+            <icon-mdi:book-open-page-variant text-20px />
           </c-button>
         </c-tooltip>
 

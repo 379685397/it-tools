@@ -7,6 +7,35 @@ import TextareaCopyable from '@/components/TextareaCopyable.vue';
 
 // Since type guards do not work in template
 
+const { t } = useI18n();
+
+function normalizeI18nId(id: string) {
+  return id
+    .replace(/[^a-zA-Z0-9]+/g, '_')
+    .replace(/^_+/, '')
+    .replace(/_+$/, '')
+    .toLowerCase();
+}
+
+function localizeOptions({ options, prefix }: { options: OGSchemaTypeElementSelect['options']; prefix: string }) {
+  return options.map((option) => {
+    if ('type' in option && option.type === 'group') {
+      const groupId = normalizeI18nId(String(option.key ?? option.label));
+      return ({
+        ...option,
+        label: t(`${prefix}.groups.${groupId}`, String(option.label)),
+        children: option.children.map((child) => {
+          const optionId = normalizeI18nId(String(child.value));
+          return ({ ...child, label: t(`${prefix}.${optionId}`, String(child.label)) });
+        }),
+      });
+    }
+
+    const optionId = normalizeI18nId(String(option.value));
+    return ({ ...option, label: t(`${prefix}.${optionId}`, String(option.label)) });
+  });
+}
+
 const metadata = ref<{ type: string; [k: string]: any }>({
   'type': 'website',
   'twitter:card': 'summary_large_image',
@@ -38,6 +67,39 @@ const sections = computed(() => {
   return secs;
 });
 
+const localizedSections = computed(() => sections.value.map((section) => {
+  return ({
+    ...section,
+    name: t(`tools.og-meta-generator.sections.${normalizeI18nId(section.id)}`, section.name),
+    elements: section.elements.map((element) => {
+      const fieldKey = normalizeI18nId(element.key);
+      const localizedBase = ({
+        ...element,
+        label: t(`tools.og-meta-generator.fields.${fieldKey}.label`, element.label),
+        placeholder: t(`tools.og-meta-generator.fields.${fieldKey}.placeholder`, element.placeholder),
+      });
+
+      if (element.type === 'select') {
+        if (element.key === 'type') {
+          return ({
+            ...(localizedBase as OGSchemaTypeElementSelect),
+            options: localizeOptions({ options: (element as OGSchemaTypeElementSelect).options, prefix: 'tools.og-meta-generator.options.pageType' }),
+          });
+        }
+
+        if (element.key === 'twitter:card') {
+          return ({
+            ...(localizedBase as OGSchemaTypeElementSelect),
+            options: localizeOptions({ options: (element as OGSchemaTypeElementSelect).options, prefix: 'tools.og-meta-generator.options.twitterCard' }),
+          });
+        }
+      }
+
+      return localizedBase;
+    }),
+  });
+}));
+
 const metaTags = computed(() => {
   const twitterMeta = _.chain(metadata.value)
     .pickBy((_value, k) => k.startsWith('twitter:'))
@@ -52,7 +114,7 @@ const metaTags = computed(() => {
 
 <template>
   <div>
-    <div v-for="{ name, elements } of sections" :key="name" style="margin-bottom: 15px">
+    <div v-for="{ id, name, elements } of localizedSections" :key="id" style="margin-bottom: 15px">
       <div mb-5px>
         {{ name }}
       </div>
@@ -83,7 +145,7 @@ const metaTags = computed(() => {
     </div>
   </div>
   <div>
-    <n-form-item label="Your meta tags">
+    <n-form-item :label="t('tools.og-meta-generator.metaTagsLabel')">
       <TextareaCopyable :value="metaTags" language="html" />
     </n-form-item>
   </div>

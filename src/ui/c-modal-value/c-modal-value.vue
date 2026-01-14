@@ -5,6 +5,7 @@ const props = withDefaults(defineProps<{ value: string; label?: string; copyable
 const { value, label } = toRefs(props);
 
 const { copy, isJustCopied } = useCopy({ source: value });
+const { t } = useI18n();
 
 const isModalOpen = ref(false);
 const toggleModal = useToggle(isModalOpen);
@@ -24,7 +25,7 @@ const toggleModal = useToggle(isModalOpen);
 
     <div mt-4 flex justify-center>
       <c-button class="w-full" @click="copy">
-        {{ isJustCopied ? 'Copied!' : 'Copy' }}
+        {{ isJustCopied ? t('ui.inputCopyable.copied') : t('ui.inputCopyable.copy') }}
       </c-button>
     </div>
   </c-modal>

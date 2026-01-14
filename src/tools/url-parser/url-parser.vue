@@ -3,24 +3,26 @@ import InputCopyable from '../../components/InputCopyable.vue';
 import { isNotThrowing } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
 
+const { t } = useI18n();
+
 const urlToParse = ref('https://me:pwd@it-tools.tech:3000/url-parser?key1=value&key2=value2#the-hash');
 
 const urlParsed = computed(() => withDefaultOnError(() => new URL(urlToParse.value), undefined));
 const urlValidationRules = [
   {
     validator: (value: string) => isNotThrowing(() => new URL(value)),
-    message: 'Invalid url',
+    message: () => t('tools.url-parser.invalidUrl'),
   },
 ];
 
-const properties: { title: string; key: keyof URL }[] = [
-  { title: 'Protocol', key: 'protocol' },
-  { title: 'Username', key: 'username' },
-  { title: 'Password', key: 'password' },
-  { title: 'Hostname', key: 'hostname' },
-  { title: 'Port', key: 'port' },
-  { title: 'Path', key: 'pathname' },
-  { title: 'Params', key: 'search' },
+const properties: { titleKey: string; key: keyof URL }[] = [
+  { titleKey: 'tools.url-parser.properties.protocol', key: 'protocol' },
+  { titleKey: 'tools.url-parser.properties.username', key: 'username' },
+  { titleKey: 'tools.url-parser.properties.password', key: 'password' },
+  { titleKey: 'tools.url-parser.properties.hostname', key: 'hostname' },
+  { titleKey: 'tools.url-parser.properties.port', key: 'port' },
+  { titleKey: 'tools.url-parser.properties.path', key: 'pathname' },
+  { titleKey: 'tools.url-parser.properties.params', key: 'search' },
 ];
 </script>
 
@@ -28,8 +30,8 @@ const properties: { title: string; key: keyof URL }[] = [
   <c-card>
     <c-input-text
       v-model:value="urlToParse"
-      label="Your url to parse:"
-      placeholder="Your url to parse..."
+      :label="t('tools.url-parser.inputLabel')"
+      :placeholder="t('tools.url-parser.inputPlaceholder')"
       raw-text
       :validation-rules="urlValidationRules"
     />
@@ -37,9 +39,9 @@ const properties: { title: string; key: keyof URL }[] = [
     <n-divider />
 
     <InputCopyable
-      v-for="{ title, key } in properties"
+      v-for="{ titleKey, key } in properties"
       :key="key"
-      :label="title"
+      :label="t(titleKey)"
       :value="(urlParsed?.[key] as string) ?? ''"
       readonly
       label-position="left"

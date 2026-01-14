@@ -1,0 +1,5 @@
+- [√] 梳理 `src/tools/index.ts` 分类与工具名称，生成中文工具指南 `docs/tool-guide.md`（含使用方式、分类清单、维护约定）。
+- [√] 更新 `README.md`，增加“功能概览/工具指南”入口并链接 `docs/tool-guide.md`，补充中文简介。
+- [√] 在站点导航/首页添加“工具指南”入口（指向文档或新路由），确保可发现性良好。
+- [√] 排查硬编码英文文案（布局、首页、公共组件、PWA manifest），迁移到 `locales/en.yml` 与 `locales/zh.yml`，调整 `vite.config.ts` 的 PWA `lang` 为 zh-CN/多语言。
+- [-] 验证：运行 `pnpm lint`（必要时 `pnpm typecheck`），手动检查入口与文案显示、PWA manifest 语言。（未执行，需后续补测）

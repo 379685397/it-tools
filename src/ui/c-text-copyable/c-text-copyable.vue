@@ -5,10 +5,11 @@ const props = withDefaults(defineProps<{ value?: string; displayedValue?: string
 const { value, displayedValue, showIcon } = toRefs(props);
 
 const { copy, isJustCopied } = useCopy({ source: value, createToast: false });
+const { t } = useI18n();
 </script>
 
 <template>
-  <c-tooltip :tooltip="isJustCopied ? 'Copied!' : 'Copy to clipboard'" cursor-pointer @click="copy">
+  <c-tooltip :tooltip="isJustCopied ? t('ui.inputCopyable.copied') : t('ui.inputCopyable.copy')" cursor-pointer @click="copy">
     <span flex items-center gap-2>
       {{ displayedValue ?? value }}
       <icon-mdi-content-copy v-if="showIcon" op-40 />

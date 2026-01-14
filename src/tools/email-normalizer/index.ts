@@ -1,11 +1,12 @@
 import { Mail } from '@vicons/tabler';
 import { defineTool } from '../tool';
+import { translate } from '@/plugins/i18n.plugin';
 
 export const tool = defineTool({
-  name: 'Email normalizer',
+  name: translate('tools.email-normalizer.title'),
   path: '/email-normalizer',
-  description: 'Normalize email addresses to a standard format for easier comparison. Useful for deduplication and data cleaning.',
-  keywords: ['email', 'normalizer'],
+  description: translate('tools.email-normalizer.description'),
+  keywords: ['email', 'normalizer', '邮箱', '标准化', '去重'],
   component: () => import('./email-normalizer.vue'),
   icon: Mail,
   createdAt: new Date('2024-08-15'),

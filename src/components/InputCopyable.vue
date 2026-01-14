@@ -7,7 +7,8 @@ const emit = defineEmits(['update:value']);
 
 const value = useVModel(props, 'value', emit);
 const { copy, isJustCopied } = useCopy({ source: value, createToast: false });
-const tooltipText = computed(() => isJustCopied.value ? 'Copied!' : 'Copy to clipboard');
+const { t } = useI18n();
+const tooltipText = computed(() => isJustCopied.value ? t('ui.inputCopyable.copied') : t('ui.inputCopyable.copy'));
 </script>
 
 <template>

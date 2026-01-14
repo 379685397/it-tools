@@ -35,7 +35,7 @@ const props = withDefaults(
   {
     value: '',
     id: generateRandomId,
-    placeholder: 'Input text',
+    placeholder: undefined,
     label: undefined,
     readonly: false,
     disabled: false,
@@ -61,12 +61,16 @@ const props = withDefaults(
   },
 );
 const emit = defineEmits(['update:value']);
+
+const { t } = useI18n();
+
 const value = useVModel(props, 'value', emit);
 const showPassword = ref(false);
 
 const { id, placeholder, label, validationRules, labelPosition, labelWidth, labelAlign, autosize, readonly, disabled, clearable, type, multiline, rows, rawText, autofocus, monospace } = toRefs(props);
+const resolvedPlaceholder = computed(() => placeholder.value ?? t('ui.input.placeholder'));
 
-const validation
+const resolvedValidation
   = props.validation
   ?? useValidation({
     rules: validationRules,
@@ -145,7 +149,7 @@ defineExpose({
 <template>
   <div
     class="c-input-text"
-    :class="{ disabled, 'error': !validation.isValid, 'label-left': labelPosition === 'left', multiline }"
+    :class="{ disabled, 'error': !resolvedValidation.isValid, 'label-left': labelPosition === 'left', multiline }"
   >
     <label v-if="label" :for="id" class="label"> {{ label }} </label>
 
@@ -162,7 +166,7 @@ defineExpose({
           :class="{
             'leading-5 !font-mono': monospace,
           }"
-          :placeholder="placeholder"
+          :placeholder="resolvedPlaceholder"
           :readonly="readonly"
           :disabled="disabled"
           :data-test-id="testId"
@@ -184,7 +188,7 @@ defineExpose({
             'leading-5 !font-mono': monospace,
           }"
           size="1"
-          :placeholder="placeholder"
+          :placeholder="resolvedPlaceholder"
           :readonly="readonly"
           :disabled="disabled"
           :data-test-id="testId"
@@ -204,7 +208,7 @@ defineExpose({
         </c-button>
         <slot name="suffix" />
       </div>
-      <span v-if="!validation.isValid" class="feedback"> {{ validation.message }} </span>
+      <span v-if="!resolvedValidation.isValid" class="feedback"> {{ resolvedValidation.message }} </span>
     </div>
   </div>
 </template>

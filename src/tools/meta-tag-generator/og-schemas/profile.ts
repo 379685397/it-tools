@@ -1,6 +1,7 @@
 import type { OGSchemaType } from '../OGSchemaType.type';
 
 export const profile: OGSchemaType = {
+  id: 'profile',
   name: 'Profile',
   elements: [
     {

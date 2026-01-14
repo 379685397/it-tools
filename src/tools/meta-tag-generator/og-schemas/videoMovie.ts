@@ -1,6 +1,7 @@
 import type { OGSchemaType } from '../OGSchemaType.type';
 
 export const videoMovie: OGSchemaType = {
+  id: 'video-movie',
   name: 'Movie details',
   elements: [
     {

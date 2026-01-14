@@ -1,11 +1,12 @@
 import { Language } from '@vicons/tabler';
 import { defineTool } from '../tool';
+import { translate } from '@/plugins/i18n.plugin';
 
 export const tool = defineTool({
-  name: 'Regex Tester',
+  name: translate('tools.regex-tester.title'),
   path: '/regex-tester',
-  description: 'Test your regular expressions with sample text.',
-  keywords: ['regex', 'tester', 'sample', 'expression'],
+  description: translate('tools.regex-tester.description'),
+  keywords: ['regex', 'tester', 'sample', 'expression', '正则', '测试'],
   component: () => import('./regex-tester.vue'),
   icon: Language,
   createdAt: new Date('2024-09-20'),

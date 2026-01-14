@@ -1,6 +1,7 @@
 import type { OGSchemaType } from '../OGSchemaType.type';
 
 export const article: OGSchemaType = {
+  id: 'article',
   name: 'Article',
   elements: [
     {

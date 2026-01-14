@@ -18,7 +18,7 @@ test.describe('Tool - Iban validator and parser', () => {
   });
 
   test('Has correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('IBAN validator and parser - IT Tools');
+    await expect(page).toHaveTitle('IBAN验证器和解析器 - IT-Tools');
   });
 
   test('iban info are extracted from a valid iban', async ({ page }) => {
@@ -27,11 +27,11 @@ test.describe('Tool - Iban validator and parser', () => {
     const ibanInfo = await extractIbanInfo({ page });
 
     expect(ibanInfo).toEqual([
-      ['Is IBAN valid ?', 'Yes'],
-      ['Is IBAN a QR-IBAN ?', 'No'],
-      ['Country code', 'DE'],
+      ['IBAN 是否有效？', '是'],
+      ['是否为 QR-IBAN？', '否'],
+      ['国家代码', 'DE'],
       ['BBAN', '370400440532013000'],
-      ['IBAN friendly format', 'DE89 3704 0044 0532 0130 00'],
+      ['友好格式', 'DE89 3704 0044 0532 0130 00'],
     ]);
   });
 
@@ -41,12 +41,12 @@ test.describe('Tool - Iban validator and parser', () => {
     const ibanInfo = await extractIbanInfo({ page });
 
     expect(ibanInfo).toEqual([
-      ['Is IBAN valid ?', 'No'],
-      ['IBAN errors', 'Wrong account bank branch checksum Wrong IBAN checksum'],
-      ['Is IBAN a QR-IBAN ?', 'No'],
-      ['Country code', 'N/A'],
-      ['BBAN', 'N/A'],
-      ['IBAN friendly format', 'FR76 3000 6060 0112 3456 7890 189'],
+      ['IBAN 是否有效？', '否'],
+      ['IBAN 错误', '银行/分行账号校验和不正确 IBAN 校验和不正确'],
+      ['是否为 QR-IBAN？', '否'],
+      ['国家代码', '不适用'],
+      ['BBAN', '不适用'],
+      ['友好格式', 'FR76 3000 6060 0112 3456 7890 189'],
     ]);
   });
 });

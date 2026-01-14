@@ -22,6 +22,7 @@ interface OGSchemaTypeElementSelect extends OGSchemaTypeElementBase {
 }
 
 interface OGSchemaType {
+  id: string
   name: string
   elements: (OGSchemaTypeElementSelect | OGSchemaTypeElementInput | OGSchemaTypeElementInputMultiple)[]
 }

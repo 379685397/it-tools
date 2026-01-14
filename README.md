@@ -31,6 +31,11 @@ Please check the [issues](https://github.com/CorentinTh/it-tools/issues) to see 
 
 You have an idea of a tool? Submit a [feature request](https://github.com/CorentinTh/it-tools/issues/new/choose)!
 
+## 功能概览 / 工具指南
+
+- 查看当前工具分类与简介：[工具指南（中文）](src/pages/tool-guide.page.md)
+- 站内入口：导航栏“工具指南”或访问 `/guide`
+
 ## Self host
 
 Self host solutions for your homelab

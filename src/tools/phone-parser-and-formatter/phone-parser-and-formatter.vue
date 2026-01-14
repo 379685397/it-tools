@@ -2,13 +2,13 @@
 import { getCountries, getCountryCallingCode, parsePhoneNumber } from 'libphonenumber-js/max';
 import lookup from 'country-code-lookup';
 import {
-  formatTypeToHumanReadable,
   getDefaultCountryCode,
   getFullCountryName,
 } from './phone-parser-and-formatter.models';
 import { withDefaultOnError } from '@/utils/defaults';
-import { booleanToHumanReadable } from '@/utils/boolean';
 import { useValidation } from '@/composable/validation';
+
+const { t } = useI18n();
 
 const rawPhone = ref('');
 const defaultCountryCode = ref(getDefaultCountryCode());
@@ -17,7 +17,7 @@ const validation = useValidation({
   rules: [
     {
       validator: value => value === '' || /^[0-9 +\-()]+$/.test(value),
-      message: 'Invalid phone number',
+      message: t('tools.phone-parser-and-formatter.invalidPhone'),
     },
   ],
 });
@@ -35,43 +35,43 @@ const parsedDetails = computed(() => {
 
   return [
     {
-      label: 'Country',
+      label: t('tools.phone-parser-and-formatter.fields.countryCode'),
       value: parsed.country,
     },
     {
-      label: 'Country',
+      label: t('tools.phone-parser-and-formatter.fields.country'),
       value: getFullCountryName(parsed.country),
     },
     {
-      label: 'Country calling code',
+      label: t('tools.phone-parser-and-formatter.fields.callingCode'),
       value: parsed.countryCallingCode,
     },
     {
-      label: 'Is valid?',
-      value: booleanToHumanReadable(parsed.isValid()),
+      label: t('tools.phone-parser-and-formatter.fields.isValid'),
+      value: parsed.isValid() ? t('ui.keyValueList.yes') : t('ui.keyValueList.no'),
     },
     {
-      label: 'Is possible?',
-      value: booleanToHumanReadable(parsed.isPossible()),
+      label: t('tools.phone-parser-and-formatter.fields.isPossible'),
+      value: parsed.isPossible() ? t('ui.keyValueList.yes') : t('ui.keyValueList.no'),
     },
     {
-      label: 'Type',
-      value: formatTypeToHumanReadable(parsed.getType()),
+      label: t('tools.phone-parser-and-formatter.fields.type'),
+      value: parsed.getType() ? t(`tools.phone-parser-and-formatter.numberTypes.${parsed.getType()}`, parsed.getType()) : undefined,
     },
     {
-      label: 'International format',
+      label: t('tools.phone-parser-and-formatter.fields.international'),
       value: parsed.formatInternational(),
     },
     {
-      label: 'National format',
+      label: t('tools.phone-parser-and-formatter.fields.national'),
       value: parsed.formatNational(),
     },
     {
-      label: 'E.164 format',
+      label: t('tools.phone-parser-and-formatter.fields.e164'),
       value: parsed.format('E.164'),
     },
     {
-      label: 'RFC3966 format',
+      label: t('tools.phone-parser-and-formatter.fields.rfc3966'),
       value: parsed.format('RFC3966'),
     },
   ];
@@ -85,12 +85,12 @@ const countriesOptions = getCountries().map(code => ({
 
 <template>
   <div>
-    <c-select v-model:value="defaultCountryCode" label="Default country code:" :options="countriesOptions" searchable mb-5 />
+    <c-select v-model:value="defaultCountryCode" :label="t('tools.phone-parser-and-formatter.defaultCountryCode')" :options="countriesOptions" searchable mb-5 />
 
     <c-input-text
       v-model:value="rawPhone"
-      placeholder="Enter a phone number"
-      label="Phone number:"
+      :placeholder="t('tools.phone-parser-and-formatter.inputPlaceholder')"
+      :label="t('tools.phone-parser-and-formatter.inputLabel')"
       :validation="validation"
       mb-5
     />
@@ -104,7 +104,7 @@ const countriesOptions = getCountries().map(code => ({
           <td>
             <span-copyable v-if="value" :value="value" />
             <span v-else op-70>
-              Unknown
+              {{ t('tools.phone-parser-and-formatter.unknown') }}
             </span>
           </td>
         </tr>

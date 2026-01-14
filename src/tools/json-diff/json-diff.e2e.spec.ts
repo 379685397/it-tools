@@ -6,7 +6,7 @@ test.describe('Tool - JSON diff', () => {
   });
 
   test('Has correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('JSON diff - IT Tools');
+    await expect(page).toHaveTitle('JSON 差异比较 - IT-Tools');
   });
 
   test('Identical JSONs have a custom result message', async ({ page }) => {
@@ -15,7 +15,7 @@ test.describe('Tool - JSON diff', () => {
 
     const result = await page.getByTestId('diff-result').innerText();
 
-    expect(result).toContain('The provided JSONs are the same');
+    expect(result).toContain('两个 JSON 内容一致');
   });
 
   test('Different JSONs have differences listed', async ({ page }) => {

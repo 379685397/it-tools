@@ -1,6 +1,7 @@
 import type { OGSchemaType } from '../OGSchemaType.type';
 
 export const book: OGSchemaType = {
+  id: 'book',
   name: 'Book',
   elements: [
     { type: 'input', label: 'Author', key: 'book:author', placeholder: 'Who wrote this book...' },

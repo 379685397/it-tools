@@ -4,8 +4,10 @@ import { useValidation } from '@/composable/validation';
 import { isNotThrowing } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
 
+const { t } = useI18n();
+
 const rawJwt = ref(
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IuW8oOS4iSIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
 );
 
 const decodedJWT = computed(() =>
@@ -13,8 +15,8 @@ const decodedJWT = computed(() =>
 );
 
 const sections = [
-  { key: 'header', title: 'Header' },
-  { key: 'payload', title: 'Payload' },
+  { key: 'header', titleKey: 'tools.jwt-parser.sections.header' },
+  { key: 'payload', titleKey: 'tools.jwt-parser.sections.payload' },
 ] as const;
 
 const validation = useValidation({
@@ -22,7 +24,7 @@ const validation = useValidation({
   rules: [
     {
       validator: value => value.length > 0 && isNotThrowing(() => decodeJwt({ jwt: rawJwt.value })),
-      message: 'Invalid JWT',
+      message: () => t('tools.jwt-parser.invalidJwt'),
     },
   ],
 });
@@ -30,13 +32,13 @@ const validation = useValidation({
 
 <template>
   <c-card>
-    <c-input-text v-model:value="rawJwt" label="JWT to decode" :validation="validation" placeholder="Put your token here..." rows="5" multiline raw-text autofocus mb-3 />
+    <c-input-text v-model:value="rawJwt" :label="t('tools.jwt-parser.inputLabel')" :validation="validation" :placeholder="t('tools.jwt-parser.inputPlaceholder')" rows="5" multiline raw-text autofocus mb-3 />
 
     <n-table v-if="validation.isValid">
       <tbody>
         <template v-for="section of sections" :key="section.key">
           <th colspan="2" class="table-header">
-            {{ section.title }}
+            {{ t(section.titleKey) }}
           </th>
           <tr v-for="{ claim, claimDescription, friendlyValue, value } in decodedJWT[section.key]" :key="claim + value">
             <td class="claims" style="vertical-align: top;">

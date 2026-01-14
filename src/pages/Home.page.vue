@@ -10,7 +10,7 @@ import { config } from '@/config';
 
 const toolStore = useToolStore();
 
-useHead({ title: 'IT Tools - Handy online tools for developers' });
+useHead({ title: 'IT-Tools - 开发者在线工具合集' });
 const { t } = useI18n();
 
 const favoriteTools = computed(() => toolStore.favoriteTools);
