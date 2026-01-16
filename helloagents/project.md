@@ -16,6 +16,8 @@
 - **工具库:** @vueuse/core、date-fns 等
 - **测试:** Vitest（单元）、Playwright（E2E）
 - **包管理器:** pnpm
+- **后端服务:** Go（`backend/`）+ MySQL（工具目录配置与下发）
+- **本地联调/一键启动:** Docker Compose（`docker-compose.yml`）
 
 ---
 
@@ -27,6 +29,8 @@
 - Lint：`pnpm lint`
 - 单元测试：`pnpm test:unit`
 - E2E 测试：`pnpm test:e2e`
+- 后端启动（本地）：`cd backend && MYSQL_DSN="user:pass@tcp(127.0.0.1:3306)/it_tools?parseTime=true" go run ./cmd/server`
+- 一键启动（推荐）：`docker compose up --build`（前端: `http://localhost:8081`，后端: `http://localhost:8080`）
 
 ---
 
@@ -69,4 +73,3 @@
   - `<tool>.vue`：工具 UI 与交互逻辑
 - 新增工具推荐使用脚本：`pnpm script:create:tool`
 - 工具说明文档与维护指南入口：`src/pages/tool-guide.page.md`（路由：`/guide`）
-

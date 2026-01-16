@@ -1,35 +1,59 @@
 import { type MaybeRef, get, useStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
 import type { Ref } from 'vue';
-import _ from 'lodash';
 import type { Tool, ToolCategory, ToolWithCategory } from './tools.types';
 import { toolsWithCategory } from './index';
+import { useToolCatalogStore } from '@/stores/tool-catalog.store';
 
 export const useToolStore = defineStore('tools', () => {
   const favoriteToolsName = useStorage('favoriteToolsName', []) as Ref<string[]>;
-  const { t } = useI18n();
+  const catalogStore = useToolCatalogStore();
 
-  const tools = computed<ToolWithCategory[]>(() => toolsWithCategory.map((tool) => {
-    const toolI18nKey = tool.path.replace(/\//g, '');
+  const localToolsById = computed(() => {
+    const map = new Map<string, ToolWithCategory>();
+    for (const tool of toolsWithCategory) {
+      const id = tool.id ?? tool.path.replace(/^\//, '');
+      map.set(id, tool);
+    }
+    return map;
+  });
 
-    return ({
-      ...tool,
-      path: tool.path,
-      name: t(`tools.${toolI18nKey}.title`, tool.name),
-      description: t(`tools.${toolI18nKey}.description`, tool.description),
-      category: t(`tools.categories.${tool.category.toLowerCase()}`, tool.category),
-    });
-  }));
+  const tools = computed<ToolWithCategory[]>(() => {
+    const categories = catalogStore.catalog?.categories ?? [];
+    const out: ToolWithCategory[] = [];
+
+    for (const category of categories) {
+      for (const tool of category.tools ?? []) {
+        const local = localToolsById.value.get(tool.id);
+        if (!local) {
+          continue;
+        }
+
+        out.push({
+          ...local,
+          id: tool.id,
+          path: tool.path,
+          name: tool.name,
+          description: tool.description ?? '',
+          keywords: tool.keywords?.length ? tool.keywords : local.keywords,
+          redirectFrom: tool.redirectFrom?.length ? tool.redirectFrom : local.redirectFrom,
+          isNew: tool.isNew,
+          createdAt: tool.createdAt ? new Date(tool.createdAt) : local.createdAt,
+          category: category.name,
+        });
+      }
+    }
+
+    return out;
+  });
 
   const toolsByCategory = computed<ToolCategory[]>(() => {
-    return _.chain(tools.value)
-      .groupBy('category')
-      .map((components, name, path) => ({
-        name,
-        path,
-        components,
-      }))
-      .value();
+    const categories = catalogStore.catalog?.categories ?? [];
+
+    return categories.map(category => ({
+      name: category.name,
+      components: tools.value.filter(t => t.category === category.name),
+    }));
   });
 
   const favoriteTools = computed(() => {

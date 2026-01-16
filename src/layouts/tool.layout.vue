@@ -6,28 +6,70 @@ import type { HeadObject } from '@vueuse/head';
 import BaseLayout from './base.layout.vue';
 import FavoriteButton from '@/components/FavoriteButton.vue';
 import type { Tool } from '@/tools/tools.types';
+import { useToolStore } from '@/tools/tools.store';
+import { DEFAULT_OG_IMAGE_URL, OG_LOCALE, SITE_NAME, SITE_ORIGIN, getCanonicalUrl } from '@/seo/seo';
 
 const route = useRoute();
+const toolStore = useToolStore();
+
+const currentTool = computed(() => toolStore.tools.find(tool => tool.path === route.path));
+const toolTitle = computed<string>(() => currentTool.value?.name ?? String(route.meta.name ?? ''));
+const toolDescription = computed<string>(() => currentTool.value?.description ?? String(route.meta.description ?? ''));
+const canonicalUrl = computed(() => getCanonicalUrl(route.path));
+const seoDescription = computed(() => toolDescription.value || `${toolTitle.value} 在线工具，免费使用。`);
+const seoKeywords = computed(() => {
+  const keywords = ((currentTool.value?.keywords ?? route.meta.keywords ?? []) as string[])
+    .filter(Boolean);
+  const base = [toolTitle.value, '在线工具', 'IT工具网'];
+  return Array.from(new Set([...keywords, ...base])).join(',');
+});
 
 const head = computed<HeadObject>(() => ({
-  title: `${route.meta.name} - IT-Tools`,
+  title: `${toolTitle.value} - ${SITE_NAME}`,
+  link: [
+    { rel: 'canonical', href: canonicalUrl.value },
+  ],
   meta: [
     {
       name: 'description',
-      content: route.meta?.description as string,
+      content: seoDescription.value,
     },
     {
       name: 'keywords',
-      content: ((route.meta.keywords ?? []) as string[]).join(','),
+      content: seoKeywords.value,
+    },
+    { name: 'robots', content: 'index,follow' },
+
+    { property: 'og:type', content: 'website' },
+    { property: 'og:locale', content: OG_LOCALE },
+    { property: 'og:site_name', content: SITE_NAME },
+    { property: 'og:title', content: `${toolTitle.value} - ${SITE_NAME}` },
+    { property: 'og:description', content: seoDescription.value },
+    { property: 'og:url', content: canonicalUrl.value },
+    { property: 'og:image', content: DEFAULT_OG_IMAGE_URL },
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        'name': toolTitle.value,
+        'description': seoDescription.value,
+        'url': canonicalUrl.value,
+        'applicationCategory': 'UtilitiesApplication',
+        'operatingSystem': 'All',
+        'inLanguage': 'zh-CN',
+        'publisher': {
+          '@type': 'Organization',
+          'name': SITE_NAME,
+          'url': SITE_ORIGIN,
+        },
+      }),
     },
   ],
 }));
 useHead(head);
-const { t } = useI18n();
-
-const i18nKey = computed<string>(() => route.path.trim().replace('/', ''));
-const toolTitle = computed<string>(() => t(`tools.${i18nKey.value}.title`, String(route.meta.name)));
-const toolDescription = computed<string>(() => t(`tools.${i18nKey.value}.description`, String(route.meta.description)));
 </script>
 
 <template>
@@ -40,7 +82,7 @@ const toolDescription = computed<string>(() => t(`tools.${i18nKey.value}.descrip
           </n-h1>
 
           <div>
-            <FavoriteButton :tool="{ name: route.meta.name, path: route.path } as Tool" />
+            <FavoriteButton :tool="currentTool ?? ({ name: toolTitle, path: route.path } as Tool)" />
           </div>
         </div>
 

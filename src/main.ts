@@ -13,17 +13,21 @@ import { naive } from './plugins/naive.plugin';
 import App from './App.vue';
 import router from './router';
 import { i18nPlugin } from './plugins/i18n.plugin';
+import { createToolCatalogGuard } from '@/router/tool-catalog.guard';
 
 registerSW();
 
 const app = createApp(App);
 
-app.use(createPinia());
+const pinia = createPinia();
+app.use(pinia);
 app.use(createHead());
 app.use(i18nPlugin);
 app.use(router);
 app.use(naive);
 app.use(plausible);
 app.use(shadow);
+
+router.beforeEach(createToolCatalogGuard(pinia));
 
 app.mount('#app');

@@ -6,8 +6,6 @@ import { useFuzzySearch } from '@/composable/fuzzySearch';
 import { useStyleStore } from '@/stores/style.store';
 
 import SunIcon from '~icons/mdi/white-balance-sunny';
-import GithubIcon from '~icons/mdi/github';
-import BugIcon from '~icons/mdi/bug-outline';
 import DiceIcon from '~icons/mdi/dice-5';
 import InfoIcon from '~icons/mdi/information-outline';
 
@@ -18,15 +16,15 @@ export const useCommandPaletteStore = defineStore('command-palette', () => {
   const searchPrompt = ref('');
   const { t } = useI18n();
 
-  const toolsOptions = toolStore.tools.map(tool => ({
+  const toolsOptions = computed(() => toolStore.tools.map(tool => ({
     ...tool,
     to: tool.path,
     toolCategory: tool.category,
     category: t('commandPalette.category.tools'),
-  }));
+  })));
 
-  const searchOptions: PaletteOption[] = [
-    ...toolsOptions,
+  const searchOptions = computed<PaletteOption[]>(() => [
+    ...toolsOptions.value,
     {
       name: t('commandPalette.randomTool'),
       description: t('commandPalette.randomToolDesc'),
@@ -48,22 +46,6 @@ export const useCommandPaletteStore = defineStore('command-palette', () => {
       keywords: ['dark', 'theme', 'toggle', 'mode', 'light', 'system'],
     },
     {
-      name: t('commandPalette.github'),
-      href: 'https://github.com/CorentinTh/it-tools',
-      category: t('commandPalette.category.external'),
-      description: t('commandPalette.githubDesc'),
-      keywords: ['github', 'repo', 'repository', 'source', 'code'],
-      icon: GithubIcon,
-    },
-    {
-      name: t('commandPalette.reportBug'),
-      description: t('commandPalette.reportBugDesc'),
-      href: 'https://github.com/CorentinTh/it-tools/issues/new/choose',
-      category: t('commandPalette.category.actions'),
-      keywords: ['report', 'issue', 'bug', 'problem', 'error'],
-      icon: BugIcon,
-    },
-    {
       name: t('commandPalette.about'),
       description: t('commandPalette.aboutDesc'),
       to: '/about',
@@ -71,7 +53,7 @@ export const useCommandPaletteStore = defineStore('command-palette', () => {
       keywords: ['about', 'learn', 'more', 'info', 'information'],
       icon: InfoIcon,
     },
-  ];
+  ]);
 
   const { searchResult } = useFuzzySearch({
     search: searchPrompt,

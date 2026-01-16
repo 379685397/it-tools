@@ -1,25 +1,25 @@
 <script setup lang="ts">
-const { availableLocales, locale, t } = useI18n();
+const { locale, t } = useI18n();
 
 const localesLong: Record<string, string> = {
   en: 'English',
-  de: 'Deutsch',
-  es: 'Español',
-  fr: 'Français',
-  no: 'Norwegian',
-  pt: 'Português',
-  ru: 'Русский',
-  uk: 'Українська',
   zh: '中文',
-  vi: 'Tiếng Việt',
 };
 
+const allowedLocales = ['zh', 'en'] as const;
+
 const localeOptions = computed(() =>
-  availableLocales.map(locale => ({
-    label: localesLong[locale] ?? locale,
-    value: locale,
+  allowedLocales.map(l => ({
+    label: localesLong[l] ?? l,
+    value: l,
   })),
 );
+
+watchEffect(() => {
+  if (locale.value !== 'zh' && locale.value !== 'en') {
+    locale.value = 'zh';
+  }
+});
 </script>
 
 <template>

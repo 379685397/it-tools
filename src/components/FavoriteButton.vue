@@ -2,11 +2,11 @@
 import { useToolStore } from '@/tools/tools.store';
 import type { Tool } from '@/tools/tools.types';
 
-const props = defineProps<{ tool: Tool }>();
+const props = withDefaults(defineProps<{ tool: Tool; size?: 'small' | 'medium' | 'large' }>(), { size: 'medium' });
 
 const toolStore = useToolStore();
 
-const { tool } = toRefs(props);
+const { tool, size } = toRefs(props);
 
 const isFavorite = computed(() => toolStore.isToolFavorite({ tool }));
 const buttonType = computed(() => (isFavorite.value ? 'primary' : 'default'));
@@ -28,6 +28,7 @@ function toggleFavorite(event: MouseEvent) {
     <c-button
       variant="text"
       circle
+      :size="size"
       :type="buttonType"
       :style="{ opacity: isFavorite ? 1 : 0.2 }"
       @click="toggleFavorite"

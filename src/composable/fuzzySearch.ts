@@ -10,20 +10,21 @@ function useFuzzySearch<Data>({
   options = {},
 }: {
   search: MaybeRef<string>
-  data: Data[]
+  data: MaybeRef<Data[]>
   options?: Fuse.IFuseOptions<Data> & { filterEmpty?: boolean }
 }) {
-  const fuse = new Fuse(data, options);
   const filterEmpty = options.filterEmpty ?? true;
+  const fuse = computed(() => new Fuse(get(data), options));
 
   const searchResult = computed<Data[]>(() => {
     const query = get(search);
+    const fuseInstance = fuse.value;
 
     if (!filterEmpty && query === '') {
-      return data;
+      return get(data);
     }
 
-    return fuse.search(query).map(({ item }) => item);
+    return fuseInstance.search(query).map(({ item }) => item);
   });
 
   return { searchResult };

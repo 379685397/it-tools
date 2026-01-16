@@ -9,32 +9,11 @@ Useful tools for developer and people working in IT. <a href="https://it-tools.t
 </p>
 
 
-## Sponsors
-
-<div align="center" markdown="1">
-<p align="center">
-  IT-Tools is proudly sponsored by:
-</p>
-
-<a href="https://go.warp.dev/it-tools">
-  <img alt="Warp sponsorship" width="400" src="https://raw.githubusercontent.com/warpdotdev/brand-assets/refs/heads/main/Github/Sponsor/Warp-Github-LG-01.png">
-</a>
-
-### [Warp, built for coding with multiple AI agents.](https://go.warp.dev/it-tools)
-[Available for MacOS, Linux, & Windows](https://go.warp.dev/it-tools)<br>
-
-</div>
-
 ## Functionalities and roadmap
 
 Please check the [issues](https://github.com/CorentinTh/it-tools/issues) to see if some feature listed to be implemented.
 
 You have an idea of a tool? Submit a [feature request](https://github.com/CorentinTh/it-tools/issues/new/choose)!
-
-## 功能概览 / 工具指南
-
-- 查看当前工具分类与简介：[工具指南（中文）](src/pages/tool-guide.page.md)
-- 站内入口：导航栏“工具指南”或访问 `/guide`
 
 ## Self host
 

@@ -1,19 +1,58 @@
 <script setup lang="ts">
-import { IconDragDrop, IconHeart } from '@tabler/icons-vue';
+import { IconDragDrop } from '@tabler/icons-vue';
 import { useHead } from '@vueuse/head';
+import type { HeadObject } from '@vueuse/head';
 import { computed } from 'vue';
 import Draggable from 'vuedraggable';
-import ColoredCard from '../components/ColoredCard.vue';
 import ToolCard from '../components/ToolCard.vue';
 import { useToolStore } from '@/tools/tools.store';
-import { config } from '@/config';
+import { DEFAULT_OG_IMAGE_URL, OG_LOCALE, SITE_NAME, SITE_ORIGIN, getCanonicalUrl } from '@/seo/seo';
 
 const toolStore = useToolStore();
+const route = useRoute();
 
-useHead({ title: 'IT-Tools - 开发者在线工具合集' });
+const canonicalUrl = computed(() => getCanonicalUrl(route.path));
+const title = `${SITE_NAME} - 开发者在线工具合集`;
+const description = '开发者常用在线工具合集，覆盖 JSON、加密、转换、网络、文本等类别，免费使用。';
+
+const head = computed<HeadObject>(() => ({
+  title,
+  link: [
+    { rel: 'canonical', href: canonicalUrl.value },
+  ],
+  meta: [
+    { name: 'description', content: description },
+    { name: 'keywords', content: 'IT工具,在线工具,开发者工具,JSON,Base64,加密,转换,正则,二维码' },
+    { name: 'robots', content: 'index,follow' },
+
+    { property: 'og:type', content: 'website' },
+    { property: 'og:locale', content: OG_LOCALE },
+    { property: 'og:site_name', content: SITE_NAME },
+    { property: 'og:title', content: title },
+    { property: 'og:description', content: description },
+    { property: 'og:url', content: canonicalUrl.value },
+    { property: 'og:image', content: DEFAULT_OG_IMAGE_URL },
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        'name': SITE_NAME,
+        'url': SITE_ORIGIN,
+        'inLanguage': 'zh-CN',
+      }),
+    },
+  ],
+}));
+
+useHead(head);
 const { t } = useI18n();
 
 const favoriteTools = computed(() => toolStore.favoriteTools);
+const newestTools = computed(() => toolStore.newTools);
+const toolsByCategory = computed(() => toolStore.toolsByCategory);
 
 // Update favorite tools order when drag is finished
 function onUpdateFavoriteTools() {
@@ -24,29 +63,8 @@ function onUpdateFavoriteTools() {
 <template>
   <div class="pt-50px">
     <div class="grid-wrapper">
-      <div class="grid grid-cols-1 gap-12px lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4">
-        <ColoredCard v-if="config.showBanner" :title="$t('home.follow.title')" :icon="IconHeart">
-          {{ $t('home.follow.p1') }}
-          <a
-            href="https://github.com/CorentinTh/it-tools"
-            rel="noopener"
-            target="_blank"
-            :aria-label="$t('home.follow.githubRepository')"
-          >GitHub</a>
-          {{ $t('home.follow.p2') }}
-          <a
-            href="https://x.com/ittoolsdottech"
-            rel="noopener"
-            target="_blank"
-            :aria-label="$t('home.follow.twitterXAccount')"
-          >X</a>.
-          {{ $t('home.follow.thankYou') }}
-          <n-icon :component="IconHeart" />
-        </ColoredCard>
-      </div>
-
       <transition name="height">
-        <div v-if="toolStore.favoriteTools.length > 0">
+        <div v-if="favoriteTools.length > 0">
           <h3 class="mb-5px mt-25px text-neutral-400 font-500">
             {{ $t('home.categories.favoriteTools') }}
             <c-tooltip :tooltip="$t('home.categories.favoritesDndToolTip')">
@@ -67,20 +85,26 @@ function onUpdateFavoriteTools() {
         </div>
       </transition>
 
-      <div v-if="toolStore.newTools.length > 0">
+      <div v-if="newestTools.length > 0">
         <h3 class="mb-5px mt-25px text-neutral-400 font-500">
           {{ t('home.categories.newestTools') }}
         </h3>
         <div class="grid grid-cols-1 gap-12px lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4">
-          <ToolCard v-for="tool in toolStore.newTools" :key="tool.name" :tool="tool" />
+          <ToolCard v-for="tool in newestTools" :key="tool.name" :tool="tool" />
         </div>
       </div>
 
       <h3 class="mb-5px mt-25px text-neutral-400 font-500">
         {{ $t('home.categories.allTools') }}
       </h3>
-      <div class="grid grid-cols-1 gap-12px lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4">
-        <ToolCard v-for="tool in toolStore.tools" :key="tool.name" :tool="tool" />
+
+      <div v-for="category in toolsByCategory" :key="category.name">
+        <h3 class="mb-5px mt-25px text-neutral-400 font-500">
+          {{ category.name }}
+        </h3>
+        <div class="grid grid-cols-1 gap-12px lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4">
+          <ToolCard v-for="tool in category.components" :key="tool.name" :tool="tool" />
+        </div>
       </div>
     </div>
   </div>

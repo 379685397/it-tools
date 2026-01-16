@@ -5,9 +5,11 @@ type WithOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 export function defineTool(tool: WithOptional<Tool, 'isNew'>) {
   const isNew = tool.createdAt ? isAfter(tool.createdAt, subWeeks(new Date(), 2)) : false;
+  const id = tool.id ?? tool.path.replace(/^\//, '');
 
   return {
     isNew,
+    id,
     ...tool,
   };
 }

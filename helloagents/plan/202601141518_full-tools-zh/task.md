@@ -1,5 +1,0 @@
-- [√] 基线巡检：搜索硬编码英文（字段/占位/提示/示例），整理键名规范，优先公共组件/常用工具。
-- [√] 批次1：Crypto + Converter 工具文案与示例本地化，更新 locales，组件改用 `$t`。
-- [ ] 批次2：Web + Development + Network 工具文案与示例本地化。（进行中：url-parser、html-entities、mime-types、jwt-parser、safelink-decoder、email-normalizer、regex-tester、regex-memo、ascii-text-drawer、numeronym-generator、og-meta-generator、device-information、iban-validator-and-parser、json-minify、json-to-csv 等）
-- [ ] 批次3：Math / Measurement / Text / Data 工具文案与示例本地化。（已推进：percentage-calculator、emoji-picker、eta-calculator、lorem-ipsum-generator、text-statistics、benchmark-builder 等）
-- [ ] 验证：运行 `pnpm lint`；抽样测试/手动检查工具页与公共区域，补漏。
