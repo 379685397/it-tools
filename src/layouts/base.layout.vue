@@ -79,18 +79,13 @@ const recentTools = computed(() => {
           <div class="footer">
             <div>
               {{ $t('home.brand.short') }}
-              v{{ version }}
-
-              <template v-if="commitSha && commitSha.length > 0">
-                -
-                {{ commitSha }}
-              </template>
+              © {{ new Date().getFullYear() }}
             </div>
             <div>
-              © {{ new Date().getFullYear() }}
-              <c-link target="_blank" rel="noopener" href="https://corentin.tech?utm_source=it-tools&utm_medium=footer">
-                Corentin Thomasset
-              </c-link>
+              杭州鸿强科技有限公司版权所有
+            </div>
+            <div>
+              浙ICP备2023014979号-1
             </div>
           </div>
         </div>
