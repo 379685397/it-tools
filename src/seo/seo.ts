@@ -1,7 +1,7 @@
 import { config } from '@/config';
 
 export const SITE_ORIGIN = 'https://tools.hongqiangnet.com';
-export const SITE_NAME = 'IT工具网';
+export const SITE_NAME = '常用工具网';
 export const DEFAULT_OG_IMAGE_URL = `${SITE_ORIGIN}/banner.png`;
 export const OG_LOCALE = 'zh_CN';
 
